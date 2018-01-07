@@ -372,6 +372,8 @@ static void USB_DeviceApplicationInit(void)
     USB_DeviceRun(g_UsbDeviceComposite.deviceHandle);
 }
 
+measurement_t measurement;
+
 #if defined(__CC_ARM) || defined(__GNUC__)
 int main(void)
 #else
@@ -396,10 +398,17 @@ void main(void)
 #endif
         if (bounce_started > 0 && (DWT->CYCCNT - bounce_started) > 100000000 /* 500ms in cycles */) {
         	bounce_started = 0;
+        	printf("start: %lu\r\n", measurement.start);
+        	const uint32_t diff_ns = (measurement.sof - measurement.start) * 5.55;
+        	const uint32_t diff_us = diff_ns / 1000;
+        	printf("sof:   %lu (Δ %dμs)\r\n", measurement.sof, diff_us);
         }
         if (bounce_started == 0) {
         	if (GPIO_PinRead(BOARD_INITPINS_SW3_GPIO, BOARD_INITPINS_SW3_PIN) == 0) {
-        		printf("sw3 pressed\r\n");
+        		measurement.start = DWT->CYCCNT;
+        		// Trigger a new measurement:
+        		measurement.sof = 0;
+        		measurement.report = 0;
         		bounce_started = DWT->CYCCNT;
         	}
         }

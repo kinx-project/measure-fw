@@ -45,6 +45,10 @@
 #include "usb_phy.h"
 #endif
 
+#include "usb_device_class.h"
+#include "usb_device_descriptor.h"
+#include "composite.h"
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -216,7 +220,11 @@ static void USB_DeviceEhciSetDefaultState(usb_device_ehci_state_struct_t *ehciSt
 
     /* Enable reset, sof, token, stall interrupt */
     ehciState->registerBase->USBINTR =
-        (USBHS_USBINTR_UE_MASK | USBHS_USBINTR_UEE_MASK | USBHS_USBINTR_PCE_MASK | USBHS_USBINTR_URE_MASK
+        (USBHS_USBINTR_UE_MASK
+         | USBHS_USBINTR_UEE_MASK
+         | USBHS_USBINTR_SRE_MASK
+         | USBHS_USBINTR_PCE_MASK
+         | USBHS_USBINTR_URE_MASK
 #if (defined(USB_DEVICE_CONFIG_LOW_POWER_MODE) && (USB_DEVICE_CONFIG_LOW_POWER_MODE > 0U))
          | USBHS_USBINTR_SLE_MASK
 #endif /* USB_DEVICE_CONFIG_LOW_POWER_MODE */
@@ -853,6 +861,10 @@ static void USB_DeviceEhciInterruptReset(usb_device_ehci_state_struct_t *ehciSta
  */
 static void USB_DeviceEhciInterruptSof(usb_device_ehci_state_struct_t *ehciState)
 {
+	if (measurement.sof != 0) {
+		return;
+	}
+	measurement.sof = DWT->CYCCNT;
 }
 
 #if (defined(USB_DEVICE_CONFIG_LOW_POWER_MODE) && (USB_DEVICE_CONFIG_LOW_POWER_MODE > 0U))

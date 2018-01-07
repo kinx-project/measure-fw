@@ -65,6 +65,14 @@ typedef struct _usb_device_composite_struct
     uint8_t currentInterfaceAlternateSetting[USB_COMPOSITE_INTERFACE_COUNT];
 } usb_device_composite_struct_t;
 
+typedef struct {
+    uint32_t start;
+    uint32_t sof;
+    uint32_t report;
+} measurement_t;
+
+extern measurement_t measurement;
+
 /*******************************************************************************
  * API
  ******************************************************************************/
