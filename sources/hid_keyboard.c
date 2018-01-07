@@ -119,8 +119,14 @@ usb_status_t USB_DeviceHidKeyboardCallback(class_handle_t handle, uint32_t event
             break;
         case kUSB_DeviceHidEventGetReport:
         case kUSB_DeviceHidEventSetReport:
-        case kUSB_DeviceHidEventRequestReportBuffer:
             error = kStatus_USB_InvalidRequest;
+            break;
+        case kUSB_DeviceHidEventRequestReportBuffer:
+            error = kStatus_USB_Success;
+            if (measurement.report != 0) {
+                break;
+            }
+            measurement.report = DWT->CYCCNT;
             break;
         case kUSB_DeviceHidEventGetIdle:
         case kUSB_DeviceHidEventGetProtocol:

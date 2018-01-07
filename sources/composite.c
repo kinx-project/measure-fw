@@ -374,6 +374,8 @@ static void USB_DeviceApplicationInit(void)
 
 measurement_t measurement;
 
+USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint8_t buf[USB_HID_KEYBOARD_REPORT_LENGTH];
+
 #if defined(__CC_ARM) || defined(__GNUC__)
 int main(void)
 #else
@@ -398,10 +400,19 @@ void main(void)
 #endif
         if (bounce_started > 0 && (DWT->CYCCNT - bounce_started) > 100000000 /* 500ms in cycles */) {
         	bounce_started = 0;
-        	printf("start: %lu\r\n", measurement.start);
-        	const uint32_t diff_ns = (measurement.sof - measurement.start) * 5.55;
-        	const uint32_t diff_us = diff_ns / 1000;
-        	printf("sof:   %lu (Δ %dμs)\r\n", measurement.sof, diff_us);
+        	printf("start:  %lu\r\n", measurement.start);
+        	{
+        		const uint32_t diff_ns = (measurement.sof - measurement.start) * 5.55;
+        		const uint32_t diff_us = diff_ns / 1000;
+        		printf("sof:    %lu (Δ %dμs)\r\n", measurement.sof, diff_us);
+        	}
+        	{
+        		const uint32_t diff_ns = (measurement.report - measurement.start) * 5.55;
+        		const uint32_t diff_us = diff_ns / 1000;
+        		const uint32_t diff_prev_ns = (measurement.report - measurement.sof) * 5.55;
+        		const uint32_t diff_prev_us = diff_prev_ns / 1000;
+        		printf("report: %lu (Δ %dμs, Δ %dμs)\r\n", measurement.report, diff_us, diff_prev_us);
+        	}
         }
         if (bounce_started == 0) {
         	if (GPIO_PinRead(BOARD_INITPINS_SW3_GPIO, BOARD_INITPINS_SW3_PIN) == 0) {
@@ -410,6 +421,26 @@ void main(void)
         		measurement.sof = 0;
         		measurement.report = 0;
         		bounce_started = DWT->CYCCNT;
+
+        		// CAPS_LOCK KeyPress
+        		buf[2] = KEY_CAPS_LOCK;
+        		USB_DeviceHidSend(
+        				g_UsbDeviceComposite.hidKeyboardHandle,
+						USB_HID_KEYBOARD_ENDPOINT_IN,
+						buf,
+						USB_HID_KEYBOARD_REPORT_LENGTH);
+
+        		// sleep for 50ms
+        		while ((DWT->CYCCNT - bounce_started) < 10000000 /* 50ms in cycles */) {
+        		}
+
+        		// CAPS_LOCK KeyRelease
+        		buf[2] = 0;
+        		USB_DeviceHidSend(
+        				g_UsbDeviceComposite.hidKeyboardHandle,
+						USB_HID_KEYBOARD_ENDPOINT_IN,
+						buf,
+						USB_HID_KEYBOARD_REPORT_LENGTH);
         	}
         }
     }
