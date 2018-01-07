@@ -379,15 +379,29 @@ void main(void)
 #endif
 {
     BOARD_InitPins();
-    BOARD_BootClockRUN();
+    BOARD_BootClockHSRUN();
     BOARD_InitDebugConsole();
 
     USB_DeviceApplicationInit();
 
+    CoreDebug->DEMCR |= (CoreDebug_DEMCR_TRCENA_Msk << CoreDebug_DEMCR_TRCENA_Pos);
+    DWT->CTRL |= (DWT_CTRL_CYCCNTENA_Msk << DWT_CTRL_CYCCNTENA_Pos);
+    DWT->CYCCNT = 0;
+
+    uint32_t bounce_started = DWT->CYCCNT;
     while (1U)
     {
 #if USB_DEVICE_CONFIG_USE_TASK
         USB_DeviceTaskFn(g_UsbDeviceComposite.deviceHandle);
 #endif
+        if (bounce_started > 0 && (DWT->CYCCNT - bounce_started) > 100000000 /* 500ms in cycles */) {
+        	bounce_started = 0;
+        }
+        if (bounce_started == 0) {
+        	if (GPIO_PinRead(BOARD_INITPINS_SW3_GPIO, BOARD_INITPINS_SW3_PIN) == 0) {
+        		printf("sw3 pressed\r\n");
+        		bounce_started = DWT->CYCCNT;
+        	}
+        }
     }
 }
