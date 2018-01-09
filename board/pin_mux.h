@@ -37,29 +37,7 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
-#define SOPT5_UART0TXSRC_UART_TX 0x00u /*!<@brief UART 0 transmit data source select: UART0_TX pin */
-
-/*! @name PORTB16 (coord E10), U7[4]/UART0_RX
-  @{ */
-#define BOARD_INITPINS_DEBUG_UART_RX_PERIPHERAL UART0       /*!<@brief Device name: UART0 */
-#define BOARD_INITPINS_DEBUG_UART_RX_SIGNAL RX              /*!<@brief UART0 signal: RX */
-#define BOARD_INITPINS_DEBUG_UART_RX_PORT PORTB             /*!<@brief PORT device name: PORTB */
-#define BOARD_INITPINS_DEBUG_UART_RX_PIN 16U                /*!<@brief PORTB pin index: 16 */
-#define BOARD_INITPINS_DEBUG_UART_RX_PIN_NAME UART0_RX      /*!<@brief Pin name */
-#define BOARD_INITPINS_DEBUG_UART_RX_LABEL "U7[4]/UART0_RX" /*!<@brief Label */
-#define BOARD_INITPINS_DEBUG_UART_RX_NAME "DEBUG_UART_RX"   /*!<@brief Identifier name */
-                                                            /* @} */
-
-/*! @name PORTB17 (coord E9), U10[1]/UART0_TX
-  @{ */
-#define BOARD_INITPINS_DEBUG_UART_TX_PERIPHERAL UART0        /*!<@brief Device name: UART0 */
-#define BOARD_INITPINS_DEBUG_UART_TX_SIGNAL TX               /*!<@brief UART0 signal: TX */
-#define BOARD_INITPINS_DEBUG_UART_TX_PORT PORTB              /*!<@brief PORT device name: PORTB */
-#define BOARD_INITPINS_DEBUG_UART_TX_PIN 17U                 /*!<@brief PORTB pin index: 17 */
-#define BOARD_INITPINS_DEBUG_UART_TX_PIN_NAME UART0_TX       /*!<@brief Pin name */
-#define BOARD_INITPINS_DEBUG_UART_TX_LABEL "U10[1]/UART0_TX" /*!<@brief Label */
-#define BOARD_INITPINS_DEBUG_UART_TX_NAME "DEBUG_UART_TX"    /*!<@brief Identifier name */
-                                                             /* @} */
+#define SOPT5_UART1TXSRC_UART_TX 0x00u /*!<@brief UART 1 transmit data source select: UART1_TX pin */
 
 /*! @name PORTA10 (coord M9), SW3
   @{ */
@@ -75,6 +53,29 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_SW3_NAME "SW3"                        /*!<@brief Identifier name */
 #define BOARD_INITPINS_SW3_DIRECTION kPIN_MUX_DirectionInput /*!<@brief Direction */
                                                              /* @} */
+
+/*! @name PORTC4 (coord A9), J1[4]/UART1_TX/FTM0_CH3/FB_AD11
+  @{ */
+#define BOARD_INITPINS_DEBUG_UART_TX_PERIPHERAL UART1                        /*!<@brief Device name: UART1 */
+#define BOARD_INITPINS_DEBUG_UART_TX_SIGNAL TX                               /*!<@brief UART1 signal: TX */
+#define BOARD_INITPINS_DEBUG_UART_TX_PORT PORTC                              /*!<@brief PORT device name: PORTC */
+#define BOARD_INITPINS_DEBUG_UART_TX_PIN 4U                                  /*!<@brief PORTC pin index: 4 */
+#define BOARD_INITPINS_DEBUG_UART_TX_PIN_NAME UART1_TX                       /*!<@brief Pin name */
+#define BOARD_INITPINS_DEBUG_UART_TX_LABEL "J1[4]/UART1_TX/FTM0_CH3/FB_AD11" /*!<@brief Label */
+#define BOARD_INITPINS_DEBUG_UART_TX_NAME "DEBUG_UART_TX"                    /*!<@brief Identifier name */
+#define BOARD_INITPINS_DEBUG_UART_TX_DIRECTION kPIN_MUX_DirectionOutput      /*!<@brief Direction */
+                                                                             /* @} */
+
+/*! @name PORTC3 (coord A11), J1[2]/UART1_RX/FTM0_CH2/CLKOUT
+  @{ */
+#define BOARD_INITPINS_DEBUG_UART_RX_PERIPHERAL UART1                       /*!<@brief Device name: UART1 */
+#define BOARD_INITPINS_DEBUG_UART_RX_SIGNAL RX                              /*!<@brief UART1 signal: RX */
+#define BOARD_INITPINS_DEBUG_UART_RX_PORT PORTC                             /*!<@brief PORT device name: PORTC */
+#define BOARD_INITPINS_DEBUG_UART_RX_PIN 3U                                 /*!<@brief PORTC pin index: 3 */
+#define BOARD_INITPINS_DEBUG_UART_RX_PIN_NAME UART1_RX                      /*!<@brief Pin name */
+#define BOARD_INITPINS_DEBUG_UART_RX_LABEL "J1[2]/UART1_RX/FTM0_CH2/CLKOUT" /*!<@brief Label */
+#define BOARD_INITPINS_DEBUG_UART_RX_NAME "DEBUG_UART_RX"                   /*!<@brief Identifier name */
+                                                                            /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
