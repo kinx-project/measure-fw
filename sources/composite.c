@@ -388,7 +388,7 @@ void main(void)
 
     USB_DeviceApplicationInit();
 
-    CoreDebug->DEMCR |= (CoreDebug_DEMCR_TRCENA_Msk << CoreDebug_DEMCR_TRCENA_Pos);
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
     DWT->CTRL |= (DWT_CTRL_CYCCNTENA_Msk << DWT_CTRL_CYCCNTENA_Pos);
     DWT->CYCCNT = 0;
 
